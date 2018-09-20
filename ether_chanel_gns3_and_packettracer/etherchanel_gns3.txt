@@ -1,0 +1,91 @@
+
+
+SWITCH 1 
+----------------------------------------------------------------- 
+
+ESW1#
+ESW1#en
+ESW1#conf t
+Enter configuration commands, one per line.  End with CNTL/Z.
+
+ESW1(config)#interface fastEthernet 1/0
+
+ESW1(config-if)#channel-group 1 mode on
+Creating a port-channel interface Port-channel1 
+ESW1(config-if)#channel-group 1 mode on
+*Mar  1 00:03:41.591: %EC-5-BUNDLE: Interface Fa1/0 joined port-channel Po1
+ESW1(config-if)#interface fastEthernet 1/1
+
+*Mar  1 00:03:44.439: %LINEPROTO-5-UPDOWN: Line protocol on Interface Port-channel1, changed state to up
+ESW1(config-if)#channel-group 1 mode on   
+ESW1(config-if)#
+*Mar  1 00:03:51.895: %EC-5-BUNDLE: Interface Fa1/1 joined port-channel Po1
+ESW1(config-if)#interface fastEthernet 1/2
+ESW1(config-if)#channel-group 1 mode on   
+ESW1(config-if)#
+*Mar  1 00:04:02.303: %EC-5-BUNDLE: Interface Fa1/2 joined port-channel Po1
+ESW1(config-if)#sh ether
+ESW1(config-if)#^Z      
+ESW1#sh
+*Mar  1 00:04:16.931: %SYS-5-CONFIG_I: Configured from console by console
+ESW1#sh ether
+ESW1#sh etherchannel su
+ESW1#sh etherchannel summary 
+Flags:  D - down        P - in port-channel
+        I - stand-alone s - suspended
+        R - Layer3      S - Layer2
+        U - in use
+Group Port-channel  Ports
+-----+------------+-----------------------------------------------------------
+1     Po1(SU)     Fa1/0(P)   Fa1/1(P)   Fa1/2(P)   
+
+ESW1#
+
+
+
+
+
+
+
+SWITCH2:
+------------------------------------------------------------------------------
+
+ESW2#EN
+ESW2#CO
+ESW2#COnf t
+Enter configuration commands, one per line.  End with CNTL/Z.
+ESW2(config)#int f1/0
+
+ESW2(config-if)#channel-group 1 mode ?
+  on  Enable Etherchannel only
+
+ESW2(config-if)#channel-group 1 mode on
+Creating a port-channel interface Port-channel1 
+ESW2(config-if)#
+*Mar  1 00:08:16.415: %EC-5-BUNDLE: Interface Fa1/0 joined port-channel Po1
+ESW2(config-if)#int f1/                
+*Mar  1 00:08:19.259: %LINEPROTO-5-UPDOWN: Line protocol on Interface Port-channel1, changed state to up
+ESW2(config-if)#int f1/1
+ESW2(config-if)#channel-group 1 mode on
+ESW2(config-if)#int f1/1               
+*Mar  1 00:08:24.919: %EC-5-BUNDLE: Interface Fa1/1 joined port-channel Po1
+ESW2(config-if)#int f1/2
+ESW2(config-if)#channel-group 1 mode on
+ESW2(config-if)#
+*Mar  1 00:08:32.543: %EC-5-BUNDLE: Interface Fa1/2 joined port-channel Po1
+ESW2(config-if)#^Z
+ESW2#
+ESW2#sh e
+*Mar  1 00:08:40.063: %SYS-5-CONFIG_I: Configured from console by console
+ESW2#sh eth  
+ESW2#sh etherchannel summ
+ESW2#sh etherchannel summary 
+Flags:  D - down        P - in port-channel
+        I - stand-alone s - suspended
+        R - Layer3      S - Layer2
+        U - in use
+Group Port-channel  Ports
+-----+------------+-----------------------------------------------------------
+1     Po1(SU)     Fa1/0(P)   Fa1/1(P)   Fa1/2(P)   
+
+ESW2#
