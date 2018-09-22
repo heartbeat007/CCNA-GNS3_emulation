@@ -1,0 +1,83 @@
+in gns3 you mast give the vlan an ip address may be the gateway ip address 
+other wise it dont work
+and you must avoid using the f0/0 in etherswitch router otherwise the
+switchport mode access dont work on that port
+
+
+  
+  
+ 
+  
+  
+
+ESW1#vlan database
+ESW1#vlan 10 name blue
+ESW1#vlan 20 name yellow
+ESW1#exit
+ESW1#sh vlan-switch 
+
+
+
+
+ESW1(config)#int f1/1
+ESW1(config-if)#switchport mode access 
+ESW1(config-if)#switchport access vlan 10
+ESW1(config-if)#exit
+ESW1(config)#int f1/2
+ESW1(config-if)#switchport mode access 
+ESW1(config-if)#switchport access vlan 10
+ESW1(config-if)#exit
+ESW1(config)#int vlan 10
+
+ESW1(config-if)#ip add 192.168.1.1 255.255.255.0
+ESW1(config-if)#no shut
+ESW1(config-if)#end
+
+ESW1(config)#int f1/3        
+ESW1(config-if)#switchport mode access 
+ESW1(config-if)#switchport access vlan 20
+ESW1(config-if)#exit
+ESW1(config)#int f1/4
+ESW1(config-if)#switchport mode access 
+ESW1(config-if)#switchport access vlan 20
+ESW1(config-if)#end
+ESW1#sh vlan-switch 
+
+VLAN Name                             Status    Ports
+---- -------------------------------- --------- -------------------------------
+1    default                          active    Fa1/0, Fa1/5, Fa1/6, Fa1/7
+                                                Fa1/8, Fa1/9, Fa1/10, Fa1/11
+                                                Fa1/12, Fa1/13, Fa1/14, Fa1/15
+10   blue                             active    Fa1/1, Fa1/2
+20   yellow                           active    Fa1/3, Fa1/4
+1002 fddi-default                     active    
+1003 token-ring-default               active    
+1004 fddinet-default                  active    
+1005 trnet-default                    active    
+
+VLAN Type  SAID       MTU   Parent RingNo BridgeNo Stp  BrdgMode Trans1 Trans2
+---- ----- ---------- ----- ------ ------ -------- ---- -------- ------ ------
+1    enet  100001     1500  -      -      -        -    -        1002   1003
+10   enet  100010     1500  -      -      -        -    -        0      0   
+20   enet  100020     1500  -      -      -        -    -        0      0   
+1002 fddi  101002     1500  -      -      -        -    -        1      1003
+1003 tr    101003     1500  1005   0      -        -    srb      1      1002
+1004 fdnet 101004     1500  -      -      1        ibm  -        0      0   
+1005 trnet 101005     1500  -      -      1        ibm  -        0      0   
+ESW1#
+
+
+
+
+
+
+
+
+/////////////////////////
+
+ip address of vlan 10
+192.168.1.50/24
+192.168.1.100/24
+ip address of vlan 20
+192.168.1.150/24
+192.168.1.200/24
