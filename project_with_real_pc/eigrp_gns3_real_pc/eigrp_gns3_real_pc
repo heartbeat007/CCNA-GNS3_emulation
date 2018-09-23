@@ -1,0 +1,207 @@
+									first etherswitch router conf
+							remember you have to give vlan and ip of the vlan
+								-----------------------------------
+ESW1#vlan database
+ESW1(vlan)#vlan 10 name blue
+VLAN 10 modified:
+    Name: blue
+ESW1(vlan)#exit
+APPLY completed.
+Exiting....
+ESW1#conf t
+Enter configuration commands, one per line.  End with CNTL/Z.
+ESW1(config)#int f1/2
+ESW1(config-if)#sw
+ESW1(config-if)#switchport mode
+ESW1(config-if)#switchport mode a
+ESW1(config-if)#switchport mode access 
+ESW1(config-if)#sw
+ESW1(config-if)#switchport a
+ESW1(config-if)#switchport access v
+ESW1(config-if)#switchport access vlan 10
+ESW1(config-if)#exit
+ESW1(config)#int vlan 10
+ESW1(config-if)#
+*Mar  1 00:01:35.267: %LINEPROTO-5-UPDOWN: Line protocol on Interface Vlan10, changed state to up
+ESW1(config-if)#ip addr 192.168.0.1 255.255.255.0
+ESW1(config-if)#no shut
+ESW1(config-if)#exit
+ESW1(config)#^Z
+ESW1#
+ESW1#
+*Mar  1 00:03:08.207: %SYS-5-CONFIG_I: Configured from console by console
+ESW1#
+
+
+
+
+
+
+									first router conf
+							----------------------------------------
+
+
+R1#conf t
+Enter configuration commands, one per line.  End with CNTL/Z.
+R1(config)#int f5/0
+R1(config-if)#ip addr 192.168.0.1 255.255.255.0
+R1(config-if)#no shut
+R1(config-if)#
+*Sep 23 07:24:30.723: %LINK-3-UPDOWN: Interface FastEthernet5/0, changed state to up
+R1(config-if)#int
+*Sep 23 07:24:30.723: %ENTITY_ALARM-6-INFO: CLEAR INFO Fa5/0 Physical Port Administrative State Down 
+*Sep 23 07:24:31.723: %LINEPROTO-5-UPDOWN: Line protocol on Interface FastEthernet5/0, changed state to up
+R1(config-if)#int s2/1
+R1(config-if)#ip addr 10.0.0.1 255.0.0.0
+R1(config-if)#no shut
+R1(config-if)#
+*Sep 23 07:24:48.283: %LINK-3-UPDOWN: Interface Serial2/1, changed state to up
+R1(config-if)#
+*Sep 23 07:24:48.283: %ENTITY_ALARM-6-INFO: CLEAR INFO Se2/1 Physical Port Administrative State Down 
+*Sep 23 07:24:49.283: %LINEPROTO-5-UPDOWN: Line protocol on Interface Serial2/1, changed state to up
+R1(config-if)#exit
+
+
+R1(config)#router eigrp 100
+
+*Sep 23 07:25:16.783: %LINEPROTO-5-UPDOWN: Line protocol on Interface Serial2/1, changed state to down
+R1(config-router)#network 192.168.0.0 ?
+  A.B.C.D  EIGRP wild card bits
+  <cr>
+
+R1(config-router)#network 192.168.0.0 0.0.0.255
+R1(config-router)#network 10.0.0.0 0.255.255.255
+R1(config-router)#no au
+R1(config-router)#no auto-summary 
+R1(config-router)#exit
+R1(config)#^Z
+R1#
+*Sep 23 07:26:10.363: %SYS-5-CONFIG_I: Configured from console by console
+R1#
+
+
+
+
+
+
+								second router conf
+					-------------------------------------------------
+
+
+R2#conf t
+Enter configuration commands, one per line.  End with CNTL/Z.
+R2(config)#int s2/1
+R2(config-if)#ip addr 10.0.0.2 255.0.0.0
+R2(config-if)#no shut
+R2(config-if)#int s2/2
+*Sep 23 07:31:53.795: %LINK-3-UPDOWN: Interface Serial2/1, changed state to up
+R2(config-if)#int s2/2
+R2(config-if)#
+*Sep 23 07:31:53.795: %ENTITY_ALARM-6-INFO: CLEAR INFO Se2/1 Physical Port Administrative State Down 
+*Sep 23 07:31:54.795: %LINEPROTO-5-UPDOWN: Line protocol on Interface Serial2/1, changed state to up
+R2(config-if)#ip addr 11.0.0.1 255.0.0.0
+R2(config-if)#no shut
+R2(config-if)#exit
+R2(config)#rou
+*Sep 23 07:32:08.571: %LINK-3-UPDOWN: Interface Serial2/2, changed state to up
+R2(config)#router
+*Sep 23 07:32:08.571: %ENTITY_ALARM-6-INFO: CLEAR INFO Se2/2 Physical Port Administrative State Down 
+R2(config)#router ei
+*Sep 23 07:32:09.575: %LINEPROTO-5-UPDOWN: Line protocol on Interface Serial2/2, changed state to up
+R2(config)#router eigrp 100
+R2(config-router)#network 10.0.0.0 0.255.255.255
+R2(config-router)#network 10.0.0.0 0.255.255.255
+*Sep 23 07:32:25.547: %DUAL-5-NBRCHANGE: IP-EIGRP(0) 100: Neighbor 10.0.0.1 (Serial2/1) is up: new adjacency
+R2(config-router)#network 11.0.0.0 0.255.255.255
+R2(config-router)#exit
+R2(config)#
+*Sep 23 07:32:32.823: %LINEPROTO-5-UPDOWN: Line protocol on Interface Serial2/2, changed state to down
+R2(config)#
+
+
+
+
+									router 3 configaretion
+						------------------------------------------------------
+
+R3#conf t
+Enter configuration commands, one per line.  End with CNTL/Z.
+R3(config)#int s3/2
+R3(config-if)#ip addr 11.0.0.2 255.0.0.0 
+R3(config-if)#no shut
+R3(config-if)#ex
+*Sep 23 07:38:10.739: %LINK-3-UPDOWN: Interface Serial3/2, changed state to up
+R3(config-if)#exit
+R3(config)#
+*Sep 23 07:38:10.739: %ENTITY_ALARM-6-INFO: CLEAR INFO Se3/2 Physical Port Administrative State Down 
+*Sep 23 07:38:11.739: %LINEPROTO-5-UPDOWN: Line protocol on Interface Serial3/2, changed state to up
+R3(config)#int f6/0
+R3(config-if)#ip addr 192.168.2.1 255.255.255.0
+R3(config-if)#no shut
+R3(config-if)#exit
+*Sep 23 07:38:33.303: %LINK-3-UPDOWN: Interface FastEthernet6/0, changed state to up
+R3(config-if)#exit
+R3(config)#
+*Sep 23 07:38:33.303: %ENTITY_ALARM-6-INFO: CLEAR INFO Fa6/0 Physical Port Administrative State Down 
+*Sep 23 07:38:34.303: %LINEPROTO-5-UPDOWN: Line protocol on Interface FastEthernet6/0, changed state to up
+R3(config)#router eigrp 100
+R3(config-router)#network 11.0.0.0 0.255.255.255
+R3(config-router)#
+*Sep 23 07:38:55.659: %DUAL-5-NBRCHANGE: IP-EIGRP(0) 100: Neighbor 11.0.0.1 (Serial3/2) is up: new adjacency
+R3(config-router)#network 192.168.2.0 0.0.0.255
+R3(config-router)#no au
+R3(config-router)#no auto-summary 
+R3(config-router)#
+*Sep 23 07:39:15.863: %DUAL-5-NBRCHANGE: IP-EIGRP(0) 100: Neighbor 11.0.0.1 (Serial3/2) is resync: summary configured
+R3(config-router)#
+R3(config-router)#
+R3(config-router)#exit
+R3(config)#
+
+
+
+
+
+
+
+							switch configaretion 
+							have to give vlan and also the 
+							vlan ip
+		-------------------------------------------------------------------------
+
+
+
+ESW2#vlan database
+ESW2(vlan)#vlan 20 name red
+VLAN 20 added:
+    Name: red
+ESW2(vlan)#exit
+APPLY completed.
+Exiting....
+ESW2#conf t   
+Enter configuration commands, one per line.  End with CNTL/Z.
+ESW2(config)#int f1/2
+
+ESW2(config-if)#switchport mode access 
+ESW2(config-if)#switchport access vlan 20
+ESW2(config-if)#exit
+ESW2(config)#int vlan 20
+ESW2(config-if)#
+*Mar  1 00:01:34.795: %LINEPROTO-5-UPDOWN: Line protocol on Interface Vlan20, changed state to up
+ESW2(config-if)#ip addr 192.168.2.1 255.255.255.0
+ESW2(config-if)#no shut
+ESW2(config-if)#exit
+ESW2(config)#
+
+
+
+
+###############################    linux pc ip address    #############################
+pc1 > 192.168.0.100/24
+pc2 > 192.168.2.100/24
+
+
+
+
+
+
